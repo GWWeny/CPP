@@ -1,0 +1,155 @@
+/*编写一个 stack栈类，在上一题的基础上：
+
+取消 output()函数，重载运算符 << ：第一行输出当前栈内元素个数，如果栈空，输出 0；
+
+如果栈不空，第二行自栈底到栈顶，输出栈内元素，每个元素后跟一个空格。
+
+如果栈空，第二行没有输出。
+
+输入描述
+
+在上一题的基础上增加一类指令：
+
+8 ：表示使用运算符<< 输出当前的栈对象
+
+第一行是一个整数m，表示创建一个容量为m的栈对象。
+
+第二行是命令的数量n
+
+接下来n行，每行是一条命令
+
+输出描述
+
+对第3、4、8类命令，输出一行或两行：该命令对应取得的结果*/
+
+#include <iostream>
+using namespace std;
+class myStack {
+public:
+    myStack(int s) : data(new int[s]), tt(-1), len(s) {
+        cout << "constructor 2" << endl;
+    }
+
+    ~myStack() {
+        delete[] data;
+        cout << "destructing" << endl;
+    }
+
+    myStack(myStack& b)
+    {
+        len = b.len;
+        tt = b.tt;
+        data = new int[len];
+        for (tt = -1; tt <= len; tt++)
+        {
+            data[tt] = b.data[tt];
+        }
+        cout << "copy constructor" << endl;
+    }
+
+    bool isEmpty() const {
+        return tt == -1;
+    }
+
+    bool isFull() const {
+        return tt == len - 1;
+    }
+
+    void push(int a) {
+        if (!isFull()) {
+            data[++tt] = a;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    void pop() {
+        if (!isEmpty()) {
+            --tt;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    bool top(int& a) const {
+        if (!isEmpty()) {
+            a = data[tt];
+            return true;
+        }
+        return false;
+    }
+
+    int size() const {
+        return tt + 1;
+    }
+
+    friend ostream& operator<<(ostream& out,myStack& t);
+
+private:
+    int* data;
+    int tt;
+    int len;
+
+};
+
+
+ostream& operator<<(ostream& out, myStack& t)
+{
+    if (!t.isEmpty())
+    {
+        for (int i = 0; i <= t.tt; ++i)
+        {
+            out << t.data[i] << " ";
+        }
+    }
+    else
+    {
+        out << "Stack is empty" << endl;
+    }
+    return out;
+}
+int main() {
+    int n, m;
+    cin >> m >> n;
+
+    myStack t(m);
+
+    for (int i = 0; i < n; ++i) {
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            int a;
+            cin >> a;
+            t.push(a);
+            break;
+        }
+        case 2:
+            t.pop();
+            break;
+        case 3: {
+            int a;
+            if (t.top(a)) {
+                cout << a << endl;
+            }
+            break;
+        }
+        case 4:
+            cout << t.size() << endl;
+            break;
+        case 8:
+            cout << t.size() << endl;
+            if (t.size() != 0)
+            {
+                cout << t << endl;
+            }
+            break;
+        }
+    }
+    return 0;
+}
