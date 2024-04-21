@@ -1,0 +1,39 @@
+//设计一个计算器类Counter，它只有一个用于计数的数据成员cnt，该计数器的有效计数范围是0-65535，实现计数器的前自减、后自减运算。
+
+#include<iostream>
+using namespace std;
+class Counter
+{
+	int cnt;
+public:
+	Counter(int a):cnt(a){}
+	~Counter(){}
+	void display()
+	{
+		cout << "counter = " << cnt << endl;
+	}
+	Counter& operator--()//前自增
+	{
+		if (cnt <= 65535 && cnt >= 0)
+			--cnt;
+		return *this;
+	}
+	Counter operator--(int a)
+	{
+		Counter temp(a);
+		if (cnt <= 65535 && cnt >= 0)
+			cnt--;
+		return temp;
+	}
+};
+
+int main()
+{
+	Counter a(200);
+	----a;
+	a.display();
+	for (int i = 0; i < 100; i++)
+		a--;
+	a.display();
+	return 0;
+}
