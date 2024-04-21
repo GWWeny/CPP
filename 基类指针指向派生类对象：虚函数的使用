@@ -1,0 +1,76 @@
+/*设计基类 Point，数据成员有：坐标值x 和 坐标值y，成员函数有：构造函数，面积函数Area()；
+Point的派生类 Rectangle ，增加数据成员：坐标值x1 和 坐标值y1，同样有构造函数 和 面积函数Area()；
+Point的派生类 Circle，增加数据成员：半径r，同样有构造函数 和 面积函数Area()；*/
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+double PI = 3.14;
+
+class Point {
+
+	public:
+		int x;
+		int y;
+		virtual double Area() {
+			cout << "Call Point's Area function." << endl;
+			return sqrt(x * x + y * y);
+
+		}
+		Point(int, int);
+};
+
+Point::Point(int x1, int y1) {
+	x = x1;
+	y = y1;
+
+}
+
+class Rectangle: virtual public Point {
+		int x1;
+		int y1;
+	public:
+		Rectangle(int a, int b, int c, int d): Point(a, b), x1(c), y1(d) {
+
+		}
+		~Rectangle() {
+
+		}
+		double Area() {
+			cout << "Call Rectangle's Area function." << endl;
+			return  (x1 - x) * (y1 - y);
+		}
+};
+
+class Circle: public Point {
+		int r;
+	public:
+		Circle(int a, int b, int c): Point(a, b), r(c) {
+
+		}
+		~Circle() {
+
+		}
+		double Area() {
+			cout << "Call Circle's Area function." << endl;
+			return  PI * r * r ;
+		}
+};
+
+double CalcArea(Point &ref) {
+	return ref.Area();
+}
+
+int main() {
+	Point p(0, 0);
+	Rectangle r(1, 2, 4, 5);
+	Circle c(0, 0, 100);
+	cout << CalcArea(p) << endl;
+	cout << CalcArea( r ) << endl;
+	cout << CalcArea( c ) << endl;
+	Point *q = &c;
+	cout << q->Area() << endl;
+	q = &r;
+	cout << q->Area() << endl;
+	return 0;
+}
