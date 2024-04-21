@@ -1,0 +1,115 @@
+/*用抽象类设计计算二维平面图形面积的程序，在基类 TDshape 中设计纯虚函数 area() 和 printName() 。
+area() 用于计算几何图形的面积，printName() 用于打印输出几何图形的类名，如 Triangle 类的对象就打印输出“Triangle”。
+每个具体形状的类则从抽象类 TDshape 派生，各自定义其独有的数据成员和成员函数，并定义 area() 和 printName() 的具体实现代码。
+函数 fp 和函数 fr 是以 TDshape 为接口的函数，借以访问具体类如 Triangle 和 Rectangle 类的成员函数 area() 和 printName() 。*/
+
+#include<iostream>
+#include<string>
+using namespace std;
+
+class TDshape
+{
+public:
+	virtual double area() = 0;
+	virtual void printName() = 0;
+	
+};
+
+class Triangle :public TDshape
+{
+	double width;
+	double height;
+public:
+	Triangle() :width(0), height(0){}
+	Triangle(double Width, double Height)
+	{
+		width = Width;
+		height = Height;
+	}
+	double area()
+	{
+		double s = (1.0 / 2) * width * height;
+		return s;
+	}
+	void printName()
+	{
+		cout << "Triangle" << endl;
+	}
+	double getWidth()
+	{
+		return width;
+	}
+	double getHeight()
+	{
+		return height;
+	}
+	void setWidth(double Width)
+	{
+		width = Width;
+	}
+	void setHeight(double Height)
+	{
+		height = Height;
+	}
+};
+class Rectangle :public TDshape
+{
+	double width;
+	double height;
+public:
+	Rectangle():width(0),height(0){}
+	Rectangle(double Width, double Height)
+	{
+		width = Width;
+		height = Height;
+	}
+	double area()
+	{
+		return width * height;
+	}
+	void printName()
+	{
+		cout << "Rectangle" << endl;
+	}
+	void setWidth(double Width)
+	{
+		width = Width;
+	}
+	void setHeight(double Height)
+	{
+		height = Height;
+	}
+	double getWidth()
+	{
+		return width;
+	}
+	double getHeight()
+	{
+		return height;
+	}
+};
+
+void fp(TDshape* p)
+{
+	cout << "area:" << p->area() << endl;
+	p->printName();
+}
+
+void fr(TDshape& r) {
+	cout << "area:" << r.area() << endl;
+	r.printName();
+}
+
+int main()
+{
+	Triangle triangle(3, 4);
+	Rectangle rectangle(4, 9);
+	rectangle.setWidth(10);
+	cout << "******from fp:" << endl;
+	fp(&triangle);
+	fp(&rectangle);
+	cout << "******from fr:" << endl;
+	fr(triangle);
+	fr(rectangle);
+	return 0;
+}
