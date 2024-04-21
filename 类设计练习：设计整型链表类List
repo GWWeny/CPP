@@ -1,0 +1,128 @@
+/*设计一个整型链表类 List，能够实现链表节点的插入 insert() 、按位置删除节点 deleteByPos() 、按值删除节点 deleteByVAlue() ，以及链表数据的输出操作 print()。
+
+构造函数、析构函数这些都不用说也知道要写的吧。*/
+
+#include<iostream>
+using namespace std;
+
+struct Node
+{
+	int data;
+	Node* next;
+
+	Node()
+	{
+		data = 0;
+		next = nullptr;
+	}
+	~Node()
+	{
+
+	}
+};
+
+class List
+{
+private:
+	Node* head;
+public:
+	List()
+	{
+		head = new Node;
+	}
+	~List()
+	{
+		Node* preNode = head;
+		Node* posNode = head->next;
+		while (posNode!=nullptr)
+		{
+			preNode->next = posNode->next;
+			delete posNode;
+			posNode = preNode->next;
+		}
+	}
+	void insert(int n, int m)
+	{
+		int i = 0;
+		Node* preNode = head;
+		while (i < n)
+		{
+			if (preNode->next == nullptr)
+			{
+				preNode->next = new Node;
+			}
+			preNode = preNode->next;
+			++i;
+		}
+		Node* posNode = new Node;
+		posNode->data = m;
+		posNode->next = preNode->next;
+		preNode->next = posNode;
+	}
+	void print()
+	{
+		Node* preNode = head;
+		while (preNode->next)
+		{
+			preNode = preNode->next;
+			cout << preNode->data << " ";
+		}
+		cout << endl;
+	}
+	void deleteByValue(int n)
+	{
+		Node* preNode = head;
+		Node* posNode;
+		while (preNode->next != nullptr)
+		{
+			if (preNode->next->data == n)
+			{
+				posNode = preNode->next;
+				preNode->next = posNode->next;
+				delete posNode;
+				return;
+			}
+			preNode = preNode->next;
+		}
+		cout << "not found data: " << n << endl;
+	}
+	void deleteByPos(int n)
+	{
+		int i = 0;
+		Node* preNode = head;
+		while (i < n-1)
+		{
+			preNode = preNode->next;
+			++i;
+		}
+		Node* posNode=preNode->next;
+		preNode->next = posNode->next;
+		delete posNode;
+		
+	}
+};
+
+
+int main()
+{
+	List l1;
+
+	l1.insert(0, 10);
+	l1.insert(0, 66);
+	l1.insert(1, 292);
+	l1.print();
+
+	l1.deleteByValue(66);
+	l1.print();
+
+	l1.insert(2,-2);
+	l1.insert(1,3);
+	l1.print();
+
+	l1.deleteByPos(2);
+	l1.print();
+
+	l1.deleteByValue(999);
+	l1.print();
+	return 0;
+}
