@@ -1,0 +1,77 @@
+/*定义哺乳动物类 Mammal，有 age（int）和 weight（double）两个数据成员，再由此派生出狗类 Dog，有 color（string）。创建一个 Dog 类的对象*/
+
+#include<iostream>
+#include<string>
+using namespace std;
+
+class Mammal
+{
+	int age;
+	double weight;
+public:
+	Mammal()
+	{
+		age = 0;
+		weight = 0;
+		cout << "Constructor in Mammal." << endl;
+	}
+	~Mammal()
+	{
+		cout << "Destructor in Mammal." << endl;
+	}
+	void setAge(int n)
+	{
+		age = n;
+	}
+	void setWeight(double m)
+	{
+		weight = m;
+	}
+	int getAge()
+	{
+		return age;
+	}
+	double getWeight()
+	{
+		return weight;
+	}
+};
+class Dog :public Mammal
+{
+	string color;
+public:
+	Dog()
+	{
+		color = "";
+		cout << "Constructor in Dog." << endl;
+	}
+	~Dog()
+	{
+		cout << "Destructor in Dog. " << endl;
+	}
+	void setColor(string a)
+	{
+		color = a;
+	}
+	string getColor()
+	{
+		return color;
+	}
+	void speak()
+	{
+		cout << "Dog sound wang,wang,wang!" << endl;
+	}
+};
+
+int main()
+{
+	Dog d;
+	d.setAge(4);
+	d.setWeight(12);
+	d.setColor("Black");
+	cout << d.getAge()  << endl;
+	cout << d.getWeight() << endl;
+	cout << d.getColor() << endl;
+	d.speak();
+	return 0;
+}
