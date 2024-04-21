@@ -1,0 +1,46 @@
+//设计一个计数器类 Counter，它只有一个用于计数的数据成员 cnt，该计数器的有效计数范围是 0 ~ 65535，实现两个计数器相加减的运算。
+
+#include<iostream>
+using namespace std;
+
+class Counter
+{
+	int cnt;
+public:
+	Counter()
+	{
+		cnt = 0;
+	}
+	Counter(int a) :cnt(a)
+	{
+
+	}
+	~Counter()
+	{
+
+	}
+	int operator+(Counter& b)
+	{
+		return cnt + b.cnt;
+	}
+	int operator-(Counter& b)
+	{
+		return cnt-b.cnt;
+	}
+	void display()
+	{
+		cout << "counter = " << cnt << endl;
+	}
+};
+
+int main() {
+	Counter a(100), b(200), c, d;
+
+	c = a + b;
+	c.display();
+
+	d = b - a;
+	d.display();
+
+	return 0;
+}
