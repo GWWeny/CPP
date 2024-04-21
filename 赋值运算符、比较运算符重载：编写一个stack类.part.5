@@ -1,0 +1,290 @@
+/*编写一个 stack栈类，在上一题的基础上：
+
+重载 赋值运算符 =  ：将一个栈对象赋值给另一个栈对象，实现深拷贝，最后输出一句：assignment
+
+重载 小于比较运算符 <    ： a 和 b 两个栈对象，当栈 a 的元素比栈 b 的元素个数少时，表达式 a < b 为真
+
+重载 大于比较运算符 >    ： a 和 b 两个栈对象，当栈 a 的元素比栈 b 的元素个数多时，表达式 a > b 为真
+
+重载 不等于运算符 !=      ： a 和 b 两个栈对象，当栈 a 的元素 与 栈 b 的元素个数不相同时；或者元素个数相等，但任意一个对应位置的元素不等时，表达式 a != b 为真
+
+重载 等于比较运算符 == ： a 和 b 两个栈对象，当栈 a 的元素 与 栈 b 的元素个数相同且所有对应位置的元素相等时，表达式 a == b 为真
+
+注意：如果采用重载友元函数的方式，使用时就变成类似：operator<(s1, s2) 这样。这与习惯上的写法 s1 < s2 差别比较大。所以不提倡友元函数写法。
+
+此外，请思考，比较运算符的返回值，应该是什么类型
+
+输入描述
+
+在上一题的基础上增加四类指令：
+
+10 ：表示上一个栈对象与当前栈对象的 小于(<)比较，如果比较结果为真，输出 yes，否则输出 no
+
+11 ：表示上一个栈对象与当前栈对象的 大于(>)比较，如果比较结果为真，输出 yes，否则输出 no
+
+12 ：表示上一个栈对象与当前栈对象的 不等于(!=)比较，如果比较结果为真，输出 yes，否则输出 no
+
+13 ：表示上一个栈对象与当前栈对象的 等于(==)比较，如果比较结果为真，输出 yes，否则输出 no
+
+输入分两部分：
+
+第一部分是作用在第一个栈对象的 n 条命令；第二部分是作用在第二个栈对象的命令，或者是第一个栈对象与第二个栈对象的比较。
+
+第一行是一个整数 m，表示创建一个容量为 m 的栈对象
+
+第二行是一个整数 n，表示接下来 n 行是作用在第一个栈对象的 n 条命令
+
+接下来 n 行，每行是一条命令
+
+接下来是一个整数 m，表示第二部分的 m 条命令
+
+接下来 m 行，每行是一条命令
+
+输出描述
+
+对第 3、4、8、10、11、12、13 类命令，输出一行或两行：该命令对应取得的结果*/
+
+#include <iostream>
+using namespace std;
+class myStack {
+public:
+    myStack():tt(-1),len(1000)
+    {
+        data = new int[len];
+        cout << "constructing" << endl;
+    }
+    myStack(int s) : data(new int[s]), tt(-1), len(s) {
+        cout << "constructor 2" << endl;
+    }
+   
+    ~myStack() {
+        delete[] data;
+        cout << "destructing" << endl;
+    }
+
+    myStack(myStack& b)
+    {
+        len = b.len;
+        tt = b.tt;
+        data = new int[len+1];
+        /*for (tt = -1; tt <= len; tt++)
+        {
+            data[tt] = b.data[tt];
+        }*/
+        for (int i = 0; i <= tt; i++)
+        {
+            data[i] = b.data[i];
+        }
+        
+    }
+
+
+    void push(int a) {
+        if (tt + 1 < len) {
+            data[++tt] = a;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    void pop() {
+        if (tt >= 0) {
+            tt--;
+        }
+        /*else
+            return;*/
+    }
+
+    bool top(int& a)  {
+        if (tt>=0) {
+            a = data[tt];
+            return true;
+        }
+        return false;
+    }
+
+    int size() const{
+        return tt + 1;
+    }
+
+    /*void output()
+    {
+        for (int i = 0; i <= tt; i++)
+            cout << data[i] << " ";
+        if(!isEmpty())
+            cout<<endl;
+    }*/
+    friend ostream& operator<<(ostream& out, myStack& t);
+    myStack& operator=(const myStack& t);
+    bool operator<(const myStack& a);
+    bool operator>(const myStack& t);
+    bool operator!=(const myStack& t);
+    bool operator==(const myStack& t);
+private:
+    int* data;
+    int tt;
+    int len;
+
+};
+
+
+ostream& operator<<(ostream& out, myStack& t)
+{
+    if (t.tt>=0)
+    {
+        for (int i = 0; i <= t.tt; i++)
+        {
+            out << t.data[i] << " ";
+        }
+    }
+    else
+    {
+        out << "Stack is empty" << endl;
+    }
+    return out;
+}
+
+myStack& myStack::operator=(const myStack& t)
+{
+    if (this != &t)
+    {
+        delete[] data;
+        len = t.len;
+        tt = t.tt;
+        data = new int[len+1];
+        for (int i=0;i<=tt;i++)
+        {
+            data[i] = t.data[i];
+        }
+    }
+    cout << "assignment" << endl;
+    return *this;
+}
+
+
+
+
+bool myStack::operator<(const myStack& a)
+{
+    return this->size() < a.size();
+}
+
+bool myStack::operator>(const myStack& t)
+{
+    return this->size() > t.size();
+}
+
+bool myStack::operator!=(const myStack& t)
+{
+    if (this->size() != t.size())
+        return true;
+    for (int i = 0; i < this->size(); i++)
+    {
+        if (this->data[i] != t.data[i])
+            return true;
+    }
+    return false;
+}
+
+bool myStack::operator==(const myStack& t)
+{
+    if (this->size() != t.size())
+        return false;
+    for (int i = 0; i < this->size(); i++)
+    {
+        if (this->data[i] != t.data[i])
+            return false;
+    }
+    return true;
+}
+
+
+int main() {
+    int n, m;
+    cin >> m >> n;
+    myStack t(m);
+    for (int i = 0; i < n; i++) {
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+              int a;
+              cin >> a;
+              t.push(a);
+              break;
+        }
+        case 2:
+            t.pop();
+            break;
+        case 3: 
+            int a;
+            if (t.top(a)) {
+                cout << a << endl;
+            }
+            break;
+        case 4:
+            cout << t.size() << endl;
+            break;
+        case 8:
+            cout << t.size() << endl;
+            if (t.size() != 0)
+            {
+                cout << t << endl;
+            }
+            break;
+        }
+    }
+
+    myStack p;
+        p = t;
+
+    cin >> m;
+    for (int i = 0; i < m; i++)
+    {
+        int choice;
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            int a;
+            cin >> a;
+            p.push(a);
+            break;
+        case 2:
+            p.pop();
+            break;
+        case 3:
+            int b;
+            if (p.top(b)) {
+                cout << b << endl;
+            }
+            break;
+        case 4:
+            cout << p.size() << endl;
+            break;
+        case 8:
+            cout << p.size() << endl;
+            if (p.size() != 0)
+            {
+                cout << p << endl;
+            }
+            break;
+        case 10:
+            cout << (t < p ? "yes" : "no") << endl;
+            break;
+        case 11:
+            cout << (t > p ? "yes" : "no") << endl;
+            break;
+        case 12:
+            cout << (t != p ? "yes" : "no") << endl;
+            break;
+        case 13:
+            cout << (t == p ? "yes" : "no") << endl;
+            break;
+        }
+    }
+    return 0;
+}
