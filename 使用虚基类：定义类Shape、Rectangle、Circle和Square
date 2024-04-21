@@ -1,0 +1,84 @@
+/*定义一个基类 Shape，在此基础上派生出 Rectangle 和 Circle，两者都有 getArea() 函数计算对象的面积。使用 Rectangle 类创建一个派生类 Square。
+1、在 Rectangle 类中有长和宽两个数据成员，在 Circle 类中有一个数据成员即半径。
+2、本题圆周率使用3.14*/
+
+#include<iostream>
+using namespace std;
+const double PI = 3.14;
+
+class Shape
+{
+public:
+	virtual float getArea() = 0;
+	virtual ~Shape(){}
+};
+class Rectangle: public Shape
+{
+private:
+	int length;
+	int width;
+public:
+	Rectangle(int l, int w) : length(l), width(w)
+	{
+
+	}
+	Rectangle()
+	{
+		length = 0;
+		width = 0;
+	}
+	~Rectangle()
+	{
+
+	}
+	float getArea()
+	{
+		return length * width;
+	}
+};
+class Circle:public Shape
+{
+	int R;
+public:
+	Circle(int r) :R(r)
+	{
+
+	}
+	~Circle()
+	{
+
+	}
+	float getArea()
+	{
+		return PI * R * R;
+	}
+};
+class Square :virtual public Rectangle
+{
+	int R;
+public:
+	Square(int n):R(n){}
+	~Square()
+	{
+
+	}
+	float getArea()
+	{
+		return R * R;
+	}
+};
+
+int main()
+{
+	Shape* ps;
+	ps = new Circle(5);
+	cout << "The area of the Circle is " << ps->getArea() << endl;
+	Rectangle* pr;
+	pr = new Rectangle(5, 6);
+	cout << "The area of the Rectagle is " << pr->getArea() << endl;
+	delete pr;
+	Square s(8);
+	pr = &s;
+	cout << "The area of the Square is " << pr->getArea() << endl;
+	return 0;
+}
