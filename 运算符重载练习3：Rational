@@ -1,0 +1,95 @@
+//完成以下代码，实现 有理数 Rational 类 的 + 加法 和 - 减法
+
+#include<cmath>
+#include<iostream>
+using namespace std;
+class Rational
+{
+	int num;
+	int den;
+	void Optimi();//分数化简
+public:
+	Rational(int x = 0, int y = 1) :num(x), den(y)
+	{
+
+	}
+	void Print();
+	Rational operator+(Rational& a);
+	Rational operator-(Rational& a);
+};
+
+void Rational::Optimi()
+{
+	if (num == 0)
+	{
+		den = 1;
+		return;
+	}
+	int gcd = (abs(num) > abs(den) ? abs(num) : abs(den));
+	if (gcd == 0)
+		return;
+	int i;
+	for (i = gcd; i > 1; i--)
+	{
+		if ((num % i == 0) && (den % i == 0))
+			break;
+	}
+	num /= i;
+	den /= i;
+	if (num < 0 && den < 0)
+	{
+		num = -num;
+		den = -den;
+	}
+	else if (num < 0 || den < 0)
+	{
+		num = -abs(num);
+		den = abs(den);
+	}
+}
+
+void Rational::Print()
+{
+	cout << num;
+	if (num != 0 && den != 1)
+	{
+		cout << "/" << den;
+	}
+	Rational::Optimi();
+}
+
+Rational Rational::operator+(Rational& a)
+{
+	Rational temp;
+	temp.num = this->num * a.den + a.num * den;
+	temp.den = this->den * a.den;
+	return temp;
+}
+
+Rational Rational::operator-(Rational& a)
+{
+	Rational temp;
+	temp.num = this->num * a.den - a.num * den;
+	temp.den = this->den * a.den;
+	return temp;
+}
+
+
+int main() {
+	Rational r1(3, 14), r2(9, 15), r3, r4;
+	r1.Print();
+	cout << endl;
+
+	r2.Print();
+	cout << endl;
+
+	r3 = r1 + r2; /// 使用重载了的运算符“+”
+	r3.Print();
+	cout << endl;
+
+	r4 = r1 - r2; /// 使用重载了的运算符“-”
+	r4.Print();
+	cout << endl;
+
+	return 0;
+}
