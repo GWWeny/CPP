@@ -1,0 +1,34 @@
+//定义点类 Point，其中有数据成员 x 和 y，表示点的横坐标与纵坐标。成员函数 double Distance( const Point & ) 的功能是求两点之间的距离。
+
+#include<iostream>
+#include<cmath>
+using namespace std;
+class Point
+{
+public:
+	Point()
+	{
+		x = 0;
+		y = 0;
+	}
+	void setPoint()
+	{
+		cin >> x >> y;
+	}
+	double Distance(const Point& m)
+	{
+		
+		return sqrt((x-m.x)*(x-m.x)+(y-m.y)*(y-m.y));
+	}
+private:
+	int x;
+	int y;
+};
+int main()
+{
+	Point a, b;
+	a.setPoint();
+	b.setPoint();
+	cout << a.Distance(b) << endl;
+	return 0;
+}
