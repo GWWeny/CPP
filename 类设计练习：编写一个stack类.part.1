@@ -1,0 +1,142 @@
+/*编写一个 stack 栈类，约定：
+
+封装数据和操作
+数据成员为私有属性，包括：
+data ：保存栈内元素，栈元素类型为 int
+tt ： 指示栈顶位置
+len : 当前栈空间的大小
+成员函数为公有属性，包括：
+默认构造函数，完成初始化动作，栈的默认大小是 1000。 最后输出一行：constructing
+析构函数只输出一行：destructing
+top( &v )，函数返回如果为真，参数 v 带回栈顶元素的值；函数返回如果为假，参数 v 的值没有变化
+pop()，如果栈不空，弹走栈顶元素；如果栈空，没有动作
+push( v )，如果栈已满，没有动作；如果栈未满，参数 v 的值进栈
+size()，返回当前栈内元素个数，如果栈空，返回 0
+output()，自栈底到栈顶，输出栈内元素，每一个元素后面跟一个空格，作为分隔。最后换行。如果栈空，没有输出
+输入描述
+
+本题需要解释执行的 5 种命令定义如下：
+
+1 a ：表示把元素 a 压入栈
+2 ：表示弹走栈顶元素
+3 ：表示读取栈顶元素的值
+4 ：表示取得当前栈内元素的个数
+5 ：表示调用 output() 函数
+第一行是命令的数量 n
+
+接下来 n 行，每行是一条命令
+
+输出描述
+
+对第 3、4、5 类命令，输出一行：该命令对应取得的结果*/
+
+#include <iostream>
+using namespace std;
+class myStack {
+public:
+    myStack() : data(new int[1000]), tt(-1), len(1000) {
+        cout << "constructing" << endl;
+    }
+
+    ~myStack(){
+        delete[] data;
+        cout << "destructing" << endl;
+    }
+
+    bool isEmpty()  {
+        return tt == -1;
+    }
+
+    bool isFull()  {
+        return tt == len - 1;
+    }
+
+    void push(int a) {
+        if (!isFull()) {
+            data[++tt] = a;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    void pop() {
+        if (!isEmpty()) {
+            --tt;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    bool top(int& a)  {
+        if (!isEmpty()) {
+            a = data[tt];
+            return true;
+        }
+        return false;
+    }
+
+    int size()  {
+        return tt + 1;
+    }
+
+    void output()  {
+        if(isEmpty())
+            return;
+        else
+        {
+            for (int i = 0; i <= tt; ++i)
+            {
+            cout << data[i] << " ";
+            }
+        cout << endl;
+        }
+    }
+private:
+    int* data;
+    int tt;  
+    int len; 
+
+};
+
+int main() {
+    int n;
+    cin >> n;
+
+    myStack t;
+
+    for (int i = 0; i < n; ++i) {
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            int a;
+            cin >> a;
+            t.push(a);
+            break;
+        }
+        case 2:
+            t.pop();
+            break;
+        case 3: {
+            int a;
+            if (t.top(a)) {
+                cout << a << endl;
+            }
+            break;
+        }
+        case 4:
+            cout << t.size() << endl;
+            break;
+        case 5:
+            t.output();
+            break;
+        }
+    }
+
+    return 0;
+}
