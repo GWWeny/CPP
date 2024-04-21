@@ -1,0 +1,36 @@
+//定义一个Tree(树)类，有成员 Age(树龄)，成员函数 grow(int years) 对 age 加上 years，age() 显示 Tree 对象的 age 的值。
+
+#include<iostream>
+using namespace std;
+class Tree
+{
+public:
+	Tree()
+	{
+		Age=0;
+	}
+	void grow(int years)
+	{
+		Age = Age + years;
+		
+	}
+	void setages(int age)
+	{
+		Age = age;
+	}
+	void age()
+	{
+		cout << Age << endl;
+	}
+private:
+	int Age;
+};
+int main()
+{
+	Tree t;
+	t.setages(3);
+	t.age();
+	t.grow(20);
+	t.age();
+	return 0;
+}
