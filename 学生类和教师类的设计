@@ -1,0 +1,173 @@
+/*一个教学系统至少有 学生 和 教师 两种类型的人员，假设 教师 的数据有 教师编号、姓名、年龄、性别、职称和系别，学生的数据有 学号、姓名、年龄、性别、班级和语文、数学、英语三门课程的成绩。现编程完成学生和教师档案数据的输入和显示。要求如下：
+设计三个类 Person、Teacher、Student，Person 是 Teacher 和 Student 的基类，具有此二类共有的数据成员姓名、年龄、性别，并具有输入和显示这些数据的成员函数；
+Teacher 类继承了 Person 类的功能，并增加对教师编号、职称和系别等数据成员进行输入和显示的成员函数。Student 类按同样的方法设计。*/
+
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+class Person
+{
+private:
+	string name;
+	int age;
+	string sex;
+public:
+	Person(string = "", int = 0, string = "");
+	void inputname()
+	{
+		cin >> name;
+	}
+	void printname()
+	{
+		cout << name << endl;
+	}
+	void inputage()
+	{
+		cin >> age;
+	}
+	void printage()
+	{
+		cout << age << endl;
+	}
+	void inputsex()
+	{
+		cin >> sex;
+	}
+	void printsex()
+	{
+		cout << sex << endl;
+	}
+};
+Person::Person(string Name,int Age,string Sex)
+{
+	name = Name;
+	age = Age;
+	sex = Sex;
+}
+class Teacher:public Person
+{
+private:
+	string teachNum;
+	string title;
+	string institute;
+public:
+	Teacher(string = "", int = 0, string = "", string = "", string = "", string = "");
+	
+	~Teacher()
+	{
+
+	}
+	void inputTeachNum()
+	{
+		cin >> teachNum;
+	}
+	void printTeachNum()
+	{
+		cout << teachNum << endl;
+	}
+	void inputTitle()
+	{
+		cin >> title;
+	}
+	void printTitle()
+	{
+		cout << title << endl;
+	}
+	void inputInstitute()
+	{
+		cin >> institute;
+	}
+	void printInstitute()
+	{
+		cout << institute;
+	}
+
+};
+Teacher::Teacher(string Name,int Age,string Sex,string TeachNum, string Title, string Institute):Person(Name,Age,Sex)
+{
+	teachNum = TeachNum;
+	title = Title;
+	institute = Institute;
+}
+
+class Student:public Person
+{
+private:
+	string num;
+	string Sclass;
+	int Chinese;
+	int Math;
+	int English;
+public:
+	Student(string="",int=0,string="",string="", string="", int = 0, int = 0, int = 0);
+	void inputNum()
+	{
+		cin >> num;
+	}
+	void printNum()
+	{
+		cout << num << endl;
+	}
+	void printSclass()
+	{
+		cout << Sclass << endl;
+	}
+	void inputSclass()
+	{
+		cin >> Sclass;
+	}
+	void inputChinese()
+	{
+		cin >> Chinese;
+	}
+	void printChinese()
+	{
+		cout << Chinese << endl;
+	}
+	void inputMath()
+	{
+		cin >> Math;
+	}
+	void printMath()
+	{
+		cout << Math << endl;
+	}
+	void inputEnglish()
+	{
+		cin >> English;
+	}
+	void printEnglish()
+	{
+		cout << English << endl;
+	}
+};
+Student::Student(string Name,int Age,string Sex,string n, string s, int c, int m , int e):Person(Name,Age,Sex)
+{
+	num = n;
+	Sclass = s;
+	Chinese = c;
+	Math = m;
+	English = e;
+}
+
+
+int main()
+{
+	Teacher t1,t2("张明", 33, "男", "T001", "讲师", "计算机科学与软件学院");
+	Student s1,s2("陈晓梅", 19, "女", "S001", "0309201", 90, 92, 98);
+	t1.inputname();
+	t1.inputage();
+	s1.inputChinese();
+	s1.inputname();
+	t1.printname();
+	t1.printage();
+	s1.printname();
+	s1.printage();
+	t2.printname();
+	t2.printage();
+	s2.printname();
+	s2.printage();
+	return 0;
+}
