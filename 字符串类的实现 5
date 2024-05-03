@@ -1,0 +1,164 @@
+//在上一题基础上，增加 myString字符串类 的方法：
+
+重载 下标运算符[] ： operator [] ( int i ) ，要求作为左操作数，即把一个字符写入数据成员 data[i] 中
+
+重载 下标运算符[] ： operator [] ( int i ) ，要求作为右操作数，只读，即读取数据成员 data[i] 的值
+
+重载 MyString类 到 char * 类型的转换 ：operator char * () ，这个的目的是给下面的 read() 函数用的
+
+
+#include <iostream>
+#include<cstring>
+#include<string>
+using namespace std;
+
+class myString {
+private:
+	char* data;
+	int len;
+public:
+	myString() : data(nullptr), len(0) {}
+
+	myString(const myString& b)
+	{
+		
+			len = b.len;
+			data = new char[len + 1];
+			strcpy(data, b.data);
+		
+	}
+
+	myString& operator=(const myString& b)
+	{
+		{
+			if (this == &b)
+				return *this;
+			if (data != nullptr)
+			{
+				delete[] data;
+
+			}
+			len = b.len;
+			data = new char[len + 1];
+			strcpy(data, b.data);
+			return *this;
+		}
+	}
+
+	~myString() {
+		delete[] data;
+	}
+
+	friend ostream& operator<<(ostream& out, const myString& t) {
+		if (t.len > 0) {
+			out << t.len << " : " << t.data;
+		}
+		else {
+			out << "0";
+		}
+		return out;
+	}
+
+	friend istream& operator>>(istream& in, myString& str) {
+		string input;
+		getline(in, input);
+
+		delete[] str.data;
+		str.len = input.length();
+		str.data = new char[str.len + 1];
+		strcpy(str.data, input.c_str());
+
+		return in;
+	}
+	friend bool operator<(const myString& a,const myString& b)
+	{
+		int minlen = min(a.len, b.len);
+		for (int i = 0; i < minlen; i++)
+		{
+			if (a.data[i] < b.data[i])
+				return true;
+			if (a.data[i] > b.data[i])
+				return false;
+		}
+		return a.len < b.len;
+	}
+	friend bool operator>(const myString& t,const myString& b)
+	{
+		int minlen = min(t.len, b.len);
+		for (int i = 0; i < minlen; i++)
+		{
+			if (t.data[i] > b.data[i])
+				return true;
+			if (t.data[i] < b.data[i])
+				return false;
+		}
+		return t.len > b.len;
+	}
+	friend bool operator!=(const myString& a,const myString b)
+	{
+		int minlen = min(a.len, b.len);
+		for (int i = 0; i < minlen; i++)
+		{
+			if (a.data[i] != b.data[i])
+				return true;
+			else
+				return false;
+		}
+		return a.len != b.len;
+	}
+	friend bool operator==(const myString& a,const myString& b)
+	{
+		if (a.len != b.len)
+			return false;
+		for (int i = 0; i < a.len; i++)
+		{
+			if (a.data[i] != b.data[i])
+				return false;
+		}
+		return true;
+	}
+	char& operator[](int i)
+	{
+		return data[i];
+	}
+	const char& operator[](int i)const
+	{
+		return data[i];
+	}
+	operator char* ()
+	{
+		return data;
+	}
+	int size() const {
+		return strlen(data);
+	}
+};
+
+void read(char* p, int n) {
+	for (int i = 0; i < n; i++)
+		cin >> p[i];
+}
+
+int main() {
+
+	myString a;
+
+	cin >> a;   /// 验证 流提取运算符的重载
+	cout << a << endl;  /// 验证 流插入运算符的重载
+
+	for (int i = 0; i < a.size(); i++)
+		cin >> a[i];   /// 验证下标运算符的重载
+
+	string tmp;
+	cin >> tmp; /// 吸收掉上一行剩余的内容，不至影响到下面的 read()
+
+	for (int i = 0; i < a.size(); i++)
+		cout << a[i];
+	cout << endl;
+
+	read(a, 20);  /// 验证 类型转换的重载
+
+	cout << a << endl;
+
+	return 0;
+}
