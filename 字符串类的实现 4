@@ -1,0 +1,146 @@
+//在《字符串类的实现 3》的基础上，增加 myString字符串类 的方法：
+
+重载 小于比较运算符 < ： a 和 b 两个字符串对象，从头到尾比较a和b的对应位置字符，当 a.data[i] < b.data[i] 时，表达式 a < b 为真
+
+重载 大于比较运算符 > ： a 和 b 两个字符串对象，从头到尾比较a和b的对应位置字符，当 a.data[i] > b.data[i] 时，表达式 a > b 为真
+
+重载 不等于运算符 != ： a 和 b 两个字符串对象，从头到尾比较a和b的对应位置字符，当 a.data[i] != b.data[i] 时，表达式 a != b 为真
+
+重载 等于比较运算符 == ： 当 a 和 b 含字符个数相同且对应位置的字符相等时，表达式 a == b 为真
+
+
+#include <iostream>
+#include<cstring>
+#include<string>
+using namespace std;
+
+class myString {
+private:
+	char* data;
+	int len;
+public:
+	myString() : data(nullptr), len(0) {}
+
+	myString(const myString& b)
+	{
+		
+			len = b.len;
+			data = new char[len + 1];
+			strcpy(data, b.data);
+		
+	}
+
+	myString& operator=(const myString& b)
+	{
+		{
+			if (this == &b)
+				return *this;
+			if (data != nullptr)
+			{
+				delete[] data;
+
+			}
+			len = b.len;
+			data = new char[len + 1];
+			strcpy(data, b.data);
+			return *this;
+		}
+	}
+
+	~myString() {
+		delete[] data;
+	}
+
+	friend ostream& operator<<(ostream& out, const myString& t) {
+		if (t.len > 0) {
+			out << t.len << " : " << t.data;
+		}
+		else {
+			out << "0";
+		}
+		return out;
+	}
+
+	friend istream& operator>>(istream& in, myString& str) {
+		string input;
+		getline(in, input);
+
+		delete[] str.data;
+		str.len = input.length();
+		str.data = new char[str.len + 1];
+		strcpy(str.data, input.c_str());
+
+		return in;
+	}
+	friend bool operator<(const myString& a,const myString& b)
+	{
+		int minlen = min(a.len, b.len);
+		for (int i = 0; i < minlen; i++)
+		{
+			if (a.data[i] < b.data[i])
+				return true;
+			if (a.data[i] > b.data[i])
+				return false;
+		}
+		return a.len < b.len;
+	}
+	friend bool operator>(const myString& t,const myString& b)
+	{
+		int minlen = min(t.len, b.len);
+		for (int i = 0; i < minlen; i++)
+		{
+			if (t.data[i] > b.data[i])
+				return true;
+			if (t.data[i] < b.data[i])
+				return false;
+		}
+		return t.len > b.len;
+	}
+	friend bool operator!=(const myString& a,const myString b)
+	{
+		int minlen = min(a.len, b.len);
+		for (int i = 0; i < minlen; i++)
+		{
+			if (a.data[i] != b.data[i])
+				return true;
+			else
+				return false;
+		}
+		return a.len != b.len;
+	}
+	friend bool operator==(const myString& a,const myString& b)
+	{
+		if (a.len != b.len)
+			return false;
+		for (int i = 0; i < a.len; i++)
+		{
+			if (a.data[i] != b.data[i])
+				return false;
+		}
+		return true;
+	}
+};
+
+int main() {
+
+	myString a, b;
+
+	cin >> a;
+	cin >> b;
+
+	if (a == b) {
+		cout << "a == b" << endl;
+	}
+	else {
+		if (a > b) {
+			cout << "a > b" << endl;
+		}
+		else {
+			if (a < b) {
+				cout << "a < b" << endl;
+			}
+		}
+	}
+
+	return 0;
+}
