@@ -1,0 +1,125 @@
+//实现 有理数 Rational 类 与 int类型、double类型 的相互转换。
+
+
+#include<iostream>
+#include<iomanip>
+using namespace std;
+
+class Rational
+{
+public:
+	Rational();
+	Rational(int x, int y);
+	explicit Rational(int x);
+	friend ostream& operator<<(ostream& ou, Rational& a);
+	Rational operator+(Rational b);
+	operator int();
+	operator double();
+private:
+	int nume;
+	int deno;
+	void optimize();
+	int gcd(int m, int n);
+};
+
+int Rational::gcd(int m, int n)
+{
+	int r = 0;
+	while (n)
+	{
+		r = m % n;
+		m = n;
+		n = r;
+	}
+	return m;
+}
+
+void Rational::optimize()
+{
+	int n = nume;
+	if (nume < 0)
+		n = -nume;
+	int r = gcd(n, deno);
+	nume = nume / r;
+	deno = deno / r;
+	if (nume < 0 && deno < 0)
+	{
+		nume = -nume;
+		deno = -deno;
+	}
+	else if (nume < 0 || deno < 0)
+	{
+		nume = -abs(nume);
+		deno = abs(deno);
+	}
+}
+Rational::Rational()
+{
+	nume = 0;
+	deno = 1;
+}
+Rational::Rational(int x, int y)
+{
+	nume = x;
+	deno = y;
+}
+
+ Rational::Rational(int x)
+{
+	nume = x;
+	deno = 1;
+}
+
+ ostream& operator<<(ostream& ou, Rational& a)
+{
+	 ou << a.nume << "/" << a.deno;
+	 return ou;
+}
+ Rational Rational::operator+(Rational b)
+ {
+	 Rational a;
+	 a.nume = this->nume * b.deno + this->deno * b.nume;
+	 a.deno = this->deno * b.deno;
+	 a.optimize();
+	 return a;
+ }
+ 
+ Rational::operator int()
+ {
+	 int r = nume / deno;
+	 return r;
+ }
+
+ Rational::operator double()
+ {
+	 double r = nume*(1.0) / deno;
+	 return r;
+ }
+
+ int main()
+ {
+	 Rational r1(3, 5), r2(9, 4), r3, r4;
+	 cout << "r1 : " << r1 << endl;
+	 cout << "r2 : " << r2 << endl;
+
+	 int n = 3;
+	 r3 = r2 + Rational(n);
+	 cout << "r3 = r2 + 3 : " << r3 << endl;
+
+	 r4 = Rational(n) + r1;
+	 cout << "r4 = Rational(n) + r1 : " << r4 << endl;
+	 
+	 int a = n + int(r2);/// 显式调用类型转换函数 int(n)
+	 //int a = n + r2;  /// 已禁止了隐式调用类型转换函数 Rational(n)
+	 cout << "a = n + int(r2) : " << a << endl;
+	 a = Rational(n) + r2;  /// 显式调用转换构造函数 Rantional(n) 转换为 Rational对象 后，再与 r2 运算，然后把结果转成 int 类型，赋值给 a
+	 cout << "a = Rational(n) + r2 : " << a << endl;
+
+	 cout << fixed << setprecision(2);
+	 double b = 3.14 + double(r2);  /// 显式调用类型转换函数 double(n)
+	 cout << "b = 3.14 + double(r2) : " << b << endl;
+	 b = Rational(3.14) + r2;  /// 先显式调用转换构造函数 Rational(3.14) 转换为 Rational对象 后，与 r2 运算，然后把结果转成 int 类型，赋值给 b
+	 cout << "b = Rational(3.14) + r2 : " << b << endl;
+
+	 return 0;
+ }
