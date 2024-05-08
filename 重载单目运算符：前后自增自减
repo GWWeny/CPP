@@ -1,0 +1,97 @@
+//设计屏幕上的点 Point类，实现：
+1、私有数据成员：x坐标值，y坐标值，均取非负值，x不超过4096，y不超过2160
+2、默认构造函数
+3、两个整形参数的构造函数
+4、前、后自增运算符，重载为成员函数
+5、前、后自减运算符，重载为友元函数
+6、流插入运算符
+
+#include<iostream>
+using namespace std;
+class Point
+{
+private:
+	int x;
+	int y;
+public:
+	Point() :x(0), y(0)
+	{
+
+	}
+	Point(int m, int n)
+	{
+		x = m;
+		y = n;
+	}
+	Point& operator++();
+	Point operator++(int);
+	friend Point& operator--(Point& p);
+	friend Point operator--(Point& p, int);
+	friend ostream& operator<<(ostream& out, Point& p);
+};
+
+Point& Point::operator++()
+{
+	if (x < 4096 && x > 0)
+		x++;
+	if (y < 2160 && y > 0)
+		y++;
+	return *this;
+}
+Point Point::operator++(int)
+{
+	Point temp(*this);
+	if (x < 4096 && x > 0)
+		x++;
+	if (y < 2160 && y > 0)
+		y++;
+	return temp;
+}
+Point& operator--(Point& p)
+{
+	if (p.x > 0 && p.x < 4096)
+		p.x--;
+	if (p.y > 0 && p.y < 2160)
+		p.y--;
+	return p;
+}
+Point operator--(Point& p, int)
+{
+	Point temp(p);
+	if (p.x > 0 && p.x < 4096)
+		p.x--;
+	if (p.y > 0 && p.y < 2160)
+		p.y--;
+	return temp;
+}
+ostream& operator<<(ostream& out, Point& p)
+{
+	out << " (" << p.x << "," << p.y << ")";
+	return out;
+}
+
+int main()
+{
+	Point p1(10, 10), p2(150, 150), p3(20, 20), p4(160, 160), p5;
+	cout << "p1 = " << p1 << endl;
+
+	++p1;
+	cout << "++p1 = " << p1 << endl;
+
+	cout << "p3 = " << p3 << endl;
+	/// 测试后置自增
+	p5 = p3++;
+	cout << "p5 = p3++ ,  p3 : " << p3 << "   p5 : " << p5 << endl;
+
+	cout << "p2 = " << p2 << endl;
+
+	--p2;
+	cout << "--p2 = " << p2 << endl;
+
+	cout << "p4 = " << p4 << endl;
+	/// 测试后置自增
+	p5 = p4--;
+	cout << "p5 = p4-- ,  p4 : " << p4 << "   p5 : " << p5 << endl;
+
+	return 0;
+}
