@@ -1,0 +1,39 @@
+//读入若干个整数，将这些数据保存到 set 容器中。采用正向迭代器和反向迭代器分别遍历 set 中的元素并输出。
+
+输入描述
+
+若干个整数
+
+输出描述
+
+使用正向迭代器和反向迭代器分别遍历输出 set 中的元素，元素之间使用空格隔开，两次遍历之间换行。
+
+
+#include<iostream>
+#include<set>
+#include<algorithm>
+using namespace std;
+int main()
+{
+	set<int> numbers;
+	int num;
+	while (cin >> num)
+	{
+		numbers.insert(num);
+	}
+	for (auto i = numbers.begin(); i != numbers.end(); i++)
+	{
+		if (i != numbers.begin())
+			cout << " ";
+		cout << *i;
+	}
+	cout << endl;
+	for (auto i = numbers.rbegin(); i != numbers.rend(); i++)
+	{
+		if (i != numbers.rbegin())
+			cout << " ";
+		cout << *i;
+	}
+	cout << endl;
+	return 0;
+}
