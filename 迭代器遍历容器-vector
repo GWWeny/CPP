@@ -1,0 +1,45 @@
+//读入 n 个整数，将这些数据保存到 vector 容器中。调用sort() 非降序排序后，采用正向迭代器和反向迭代器分别遍历 vector 中的元素并输出。
+
+输入描述
+
+第一行是一个整数 n ( n > 0 ) 个整数；
+第二行是n个整数。
+
+输出描述
+
+使用正向迭代器和反向迭代器分别遍历输出 vector 中的元素，元素之间使用空格隔开，两次遍历之间换行。
+例如：
+1 2 3 4 5
+5 4 3 2 1
+
+
+#include<iostream>
+#include<algorithm>//包含sort()
+#include<vector>
+using namespace std;
+int main()
+{
+	int n;
+	cin >> n;
+	vector<int> numbers(n);
+	for (int i = 0; i < n; i++)
+	{
+		cin >> numbers[i];
+	}
+	sort(numbers.begin(), numbers.end());
+	for (auto i = numbers.begin(); i != numbers.end(); i++)
+	{
+		if (i != numbers.begin())
+			cout << " ";
+		cout << *i;
+	}
+	cout << endl;
+	for (auto i = numbers.rbegin(); i != numbers.rend(); i++)
+	{
+		if (i != numbers.rbegin())
+			cout << " ";
+		cout << *i;
+	}
+	cout << endl;
+	return 0;
+}
