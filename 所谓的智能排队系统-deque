@@ -1,0 +1,40 @@
+//请设计一个排队程序。用户有 普通客人 和 VIP客人 之分，新增 VIP客人放在队列头部，新增普通客人放入队尾。
+
+输入描述
+
+若干行，每行两个字符串，每行是 2 个字符串，第一个字符串是 客人姓名 ，第二个字符串是 VIP 或者 NORMAL 。
+
+
+#include<iostream>
+#include<deque>
+#include<string>
+#include<queue>
+using namespace std;
+struct Customer
+{
+	string name;
+	bool isVIP;
+};
+int main()
+{
+	deque<Customer> customerdeque;
+	string name, type;
+	while (cin >> name >> type )
+	{
+		Customer customer = { name,{type == "VIP"} };
+	    if (name == "100" && type=="VIP")
+			break;
+		if (customer.isVIP)
+			customerdeque.push_front(customer);
+		else
+			customerdeque.push_back(customer);
+	
+	}
+	while (!customerdeque.empty())
+	{
+		Customer customerfront = customerdeque.front();
+		cout << "Process customer:" << customerfront.name << "(" << (customerfront.isVIP ? "VIP" : "NORMAL") << ")" << endl;
+		customerdeque.pop_front();
+	}
+	return 0;
+}
