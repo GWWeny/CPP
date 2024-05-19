@@ -1,0 +1,44 @@
+//给出 2 组个数分别是 n 和 m 的整数，将这两组数据分别存储在 list 容器中，并将两个链表合并，合并之后删除重复元素，对链表中的值从小到大排序。
+
+输入描述
+
+第一行是 2 个整数 n, m ( 0 < n, m < 100000 )，
+第二行是 n 个整数，表示第一组数据，
+第三行是 m 个整数，表示第二组数据。
+
+输出描述
+
+合并、去重、排序后的链表里的整数
+
+
+#include<iostream>
+#include<deque>
+#include<string>
+#include<iostream>
+#include<list>
+using namespace std;
+int main()
+{
+	int n, m;
+	cin >> n >> m;
+		list<int> list1, list2;
+		for (int i = 0; i < n; i++)
+		{
+			int num;
+			cin >> num;
+			list1.push_back(num);
+		}
+		for (int i = 0; i < m; i++)
+		{
+			int num;
+			cin >> num;
+			list2.push_back(num);
+		}
+		list1.merge(list2);//合并链表
+		list1.sort();//使用<或给定比较操作排序元素
+		list1.unique();//删除同一值的连续复制
+		for (int num : list1)
+			cout << num << " ";
+		cout << endl;
+	return 0;
+}
