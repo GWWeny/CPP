@@ -1,0 +1,823 @@
+#include<graphics.h>
+#include<stdio.h>
+#include<iostream>
+#include<windows.h>
+#include<string>
+#include <sstream>
+#include<fstream>
+using namespace std;
+
+void LineChange();//设置直线更新
+void pauseOnSpace();//暂停
+void drawInitgraph();//Easyx
+void CreateNode();//创建队列节点
+void EnQueue1();//入队1
+void EnQueue2();//入队2
+void OutQueue1();//出队1
+void OutQueue2();//出队2
+void ShowFrontPush1();//队首元素代码区移动1
+void QueueElementPush();//队列元素移动
+void QueueElementDelete();//队列元素删除
+void QueueArrow();//链表箭头
+void ShowTail1(int a);//显示队尾指针1
+void ShowTail2(int a);//显示队尾指针2
+void ShowFront1(int a);//显示队首指针1
+void ShowFront2(int a);//显示队首指针2
+void DeleteFront1(int a);//删除队首指针1
+void DeleteFront2(int a);//删除队首指针2
+void DeleteTail1(int a);//删除队尾指针1
+void DeleteTail2(int a);//删除队尾指针2
+void DeleteQueueArrow();//删除链表箭头
+void DeleteFrontTail2();//删除队首队尾指针2
+void ShowAll();//代码显示过程
+void ShowCS();//显示命令序列
+void DeleteFrontTail1();//删除队首队尾指针1
+void CSArrow();//命令序列箭头
+void DeleteCSArrow();//删除命令序列箭头
+int n;
+char str[50] = "";
+char ss[100] = "";
+//窗口长度宽度
+int length = 1010;//1010
+int wide =600;//600
+
+// 初始化矩形的位置
+int xPositions[10]; // 假设最多有10个矩形
+int y = wide/2-120;//180
+int initialX = 280;//35
+int deltaX = 55; // 矩形之间的水平间距
+
+int e = 1;
+int score = 0;
+int i = 0;
+int data1=0;
+int x = 45;
+int stairs = 0;
+
+int ssa = 0;
+int ssd = 0;
+int sse = 0;//无删除，一直加
+int ssf = 0;//删除队列元素
+int ssg = 0;//命令序列
+
+int s = 320;//指针箭头的位置
+//左下角步骤
+int a2 = 390;
+int a1 = 120;
+//代码演示区首行
+int b1 = 10;
+//测试用例
+ifstream infile("test1.txt");
+//ifstream infile("test3.txt");
+//配置文件1
+ifstream datafile("profile1.txt");
+ifstream datafile3("profile1_2.txt");
+ifstream datafile1("profile1_1.txt");
+//ifstream datafile2("profile3_1.txt");
+
+//定义链表结点结构
+struct Node
+{
+    int data;//数据域
+    Node* next;//指针域
+    Node(int d) :data(d), next(nullptr)
+    {
+
+    }
+};
+//定义队列表
+class Queue
+{
+private:
+    Node* front;//头指针
+    Node* tail;//尾指针
+public:
+    Queue() :front(nullptr), tail(nullptr)
+    {
+
+    }
+    //判空
+    bool isEmpty()
+    {
+        return front == nullptr;
+    }
+    //入队
+    void inqueue(int data)
+    {
+        Node* newNode = new Node(data);
+        if (isEmpty())
+        {
+            front = tail = newNode;
+        }
+        else
+        {
+            tail->next = newNode;
+            tail = newNode;
+        }
+        std::cout << "已入队！插入的数据为" << tail->data << endl;
+    }
+    //出队
+    void outqueue()
+    {
+        if (isEmpty())
+        {
+            std::cout << "队列为空，无法出队!" << endl;
+            return;
+        }
+        Node* temp = front;
+        front = front->next;
+        std::cout << "出队成功,出队的数据为：" << temp->data << endl;
+        delete temp;
+    }
+    //获取队首元素
+    bool frontElement(int& v)
+    {
+        if (isEmpty())
+        {
+            std::cout << "队列是空的!" << endl;
+            return false;
+        }
+        v = front->data;
+        return true;
+    }
+    //遍历队列元素
+    void show()
+    {
+        if (isEmpty())
+        {
+            std::cout << "队列为空，无法遍历" << endl;
+            return;
+        }
+        Node* current = front;
+        std::cout << "队列元素遍历为：" << endl;
+        while (current != nullptr)
+        {
+            std::cout << current->data << "->";
+            current = current->next;
+        }
+        std::cout << endl;
+    }
+};
+
+
+
+//代码区显示过程.
+void ShowAll()
+{
+    std::string txy;
+    settextstyle(15, 0, "宋体");
+    settextcolor(BLACK);
+    int i = 0;
+    while (getline(datafile, txy))
+    {
+        char ggg[100];
+        strcpy(ggg, txy.c_str());
+        outtextxy(length / 2 + 180, b1 + 30 * i, ggg);//x+160
+        i++;
+    }
+    int j = 0;
+    while (getline(datafile3, txy))
+    {
+        char ggg[100];
+        strcpy(ggg, txy.c_str());
+        outtextxy(length / 2 -180, wide/2+120 + 30 * j, ggg);
+        j++;
+    }
+}
+
+//显示命令序列
+void ShowCS()
+{
+    std::string txy;
+    settextstyle(15, 0, "宋体");
+    settextcolor(BLACK);
+    int i = 0;
+    while (getline( datafile1 /*datafile2*/, txy))
+    {
+        char ggg[100];
+        strcpy(ggg, txy.c_str());
+        outtextxy(50, 50 + i * 22, ggg);
+        i++;
+    }
+}
+
+
+
+#include"MainFunction.h"
+
+using namespace std;
+//主函数
+int main() {
+    //GraphicsObject obj;
+    drawInitgraph();
+    Queue q;
+    string buffer;
+    if (infile.is_open() == false)
+    {
+        cout << "打开文件" << "失败。\n";
+        return 0;
+    }
+    std::cout << "设置队列的容量n" << endl;
+    infile >> n;
+    DeleteCSArrow();
+    ShowCS();
+    while (1)
+    {
+        int choose;
+        std::cout << "请选择你的操作" << endl;
+        infile >> choose;
+        DeleteCSArrow();
+        CSArrow();
+        switch (choose)
+        {
+        case 1:
+            pauseOnSpace();
+            std::cout << "正在入队中！" << endl;
+            pauseOnSpace();
+            if (q.isEmpty())
+            {
+                EnQueue1();
+                QueueElementPush();
+                pauseOnSpace();
+            }
+            else
+            {
+                pauseOnSpace();
+                EnQueue2();
+
+                ShowTail2(s);
+                DeleteTail1(s);
+                DeleteTail2(s);
+                pauseOnSpace();
+                ShowTail2(s);
+                QueueArrow();
+                QueueElementPush();
+                pauseOnSpace();
+            }
+
+            q.inqueue(score);
+            q.show();
+            ssa++;
+            sse++;
+            break;
+        case 2:
+            std::cout << "正在出队中！" << endl;
+            pauseOnSpace();
+            if (q.isEmpty())
+            {
+                pauseOnSpace();
+                OutQueue1();
+                q.outqueue();
+                DeleteFrontTail1();
+                pauseOnSpace();
+            }
+            else
+            {
+                pauseOnSpace();
+                DeleteQueueArrow();
+                pauseOnSpace();
+                q.outqueue();
+                if (q.isEmpty())
+                {
+                    pauseOnSpace();
+                    DeleteFrontTail2();
+                }
+                else
+                {
+                    pauseOnSpace();
+                    DeleteFront1(s);
+                    DeleteFront2(s);
+                    ShowFront2(s);
+                }
+                pauseOnSpace();
+                OutQueue2();
+                QueueElementDelete();
+                pauseOnSpace();
+                ssa--;
+                ssd++;
+                if (ssa <= 0)
+                {
+                    
+                    e = 1;
+                    sse = 0;
+                    ssf = 0;
+                }
+                q.show();
+                Sleep(250);
+                break;
+        case 3:
+            std::cout << "正在打印队首元素中！" << endl;
+            pauseOnSpace();
+            if (q.isEmpty())
+            {
+                pauseOnSpace();
+                ShowFrontPush1();
+            }
+                
+            else
+            {
+                pauseOnSpace();
+                setlinecolor(BLACK);
+                rectangle(length / 2 + 165, 480, length / 2 + 465, 510);
+                Sleep(250);
+                setlinecolor(WHITE);
+                rectangle(length / 2 + 165, 480, length / 2 + 465, 510);
+                pauseOnSpace();
+                int FrontElement;
+                for (int i = 0; i < 3; i++)
+                {
+                    pauseOnSpace();
+                    setlinecolor(BLACK);
+                    rectangle(length / 2 + 165, 510 + 30 * i, length / 2 + 365, 540 + 30 * i);
+                    Sleep(250);
+                    setlinecolor(WHITE);
+                    rectangle(length / 2 + 165, 510 + 30 * i, length / 2 + 365, 540 + 30 * i);
+                    pauseOnSpace();
+                    if (i == 2)
+                    {
+                        char sst[50] = "";
+                        //输出队首元素
+                        settextstyle(25, 25, "宋体");
+                        settextcolor(BLACK);
+                        q.frontElement(FrontElement);
+                        /*sprintf(sst, "%d", FrontElement);
+                        outtextxy(190, 70, sst);*/
+                        outtextxy(length/2-180, wide/2-235, to_string(FrontElement).c_str());
+                        Sleep(1000);
+                        settextcolor(WHITE);
+                        outtextxy(length / 2 - 180, wide / 2 - 235, to_string(FrontElement).c_str());
+
+                    }
+                    Sleep(250);
+                }
+            }
+            break;
+        case 4:
+            pauseOnSpace();
+            Sleep(2000);
+            datafile.close();
+            datafile1.close();
+            datafile3.close();
+            infile.close();
+            exit(0);
+            }
+        }
+    }
+    return 0;
+}
+
+//Easyx
+void drawInitgraph()
+{
+    //设置窗口大小，显示窗口
+    initgraph(length, wide,0);
+    //设置窗口颜色
+    setbkcolor(WHITE);
+    //用设置的背景颜色填充整个窗口
+    cleardevice();
+    LineChange();
+    //设置队首队尾朝向
+    settextcolor(BLACK);
+    outtextxy(length/2-225, wide/2-170, "队首");
+    outtextxy(length/2+115, wide/2-170, "队尾");
+    //显示左上角队列
+    settextcolor(GREEN);
+    settextstyle(30,10, "微软雅黑");
+    outtextxy(220, 10, "队列：");
+    //标出队首元素
+    settextstyle(30, 10, "微软雅黑");
+    outtextxy(220, wide/2-240, "队首元素：");
+    //暂停提示
+    settextcolor(BLACK);
+    settextstyle(15, 15, "宋体");
+    outtextxy(length / 2 - 150, wide / 2 + 80, "暂停请按空格键");
+    //命令序列
+    settextcolor(BLACK);
+    settextstyle(15, 0, "宋体");
+    outtextxy(50, 20, "命令序列：");
+    ShowAll();
+}
+//设置直线更新
+void LineChange()
+{
+    //设置竖直线
+    setlinecolor(BLACK);
+    line(length/2+160, 0, length/2+160, wide);
+    //设置上直线和颜色
+    setlinecolor(BLACK);
+    line(length/2 -220, wide-440, length/2+160, wide-440);
+    //设置下直线和颜色
+    setlinecolor(BLACK);
+    line(length/2 - 220, wide-300, length/2+160, wide-300);
+}
+//创建队列结点
+void CreateNode()
+{
+    //setfillcolor(RGB(90, 164, 174));
+    //setfillcolor(WHITE);
+    int a = 0;
+    for (int i = 0; i < n; i++)
+    {
+        xPositions[i] = initialX + i * deltaX;
+    }
+    // 绘制当前矩形
+    setlinecolor(BLACK);
+    fillrectangle(xPositions[a] + sse * deltaX, y, xPositions[a] + 40 + sse * deltaX, y + 50);
+    fillrectangle(xPositions[a] + sse * deltaX, y + 50, xPositions[a] + 40 + sse * deltaX, y + 100);
+    Sleep(250);
+}
+//入队1
+void EnQueue1()
+{
+    CreateNode();
+    ShowTail1(s);
+    ShowFront1(s);
+    for (int i = 0; i < 2; i++)
+    {
+        setlinecolor(BLACK);
+        rectangle(length / 2 + 165, 0 + 30 * i, length / 2 + 465, 30 + 30 * i);
+        Sleep(250);
+        setlinecolor(WHITE);
+        rectangle(length / 2 + 165, 0 + 30 * i, length / 2 + 465, 30 + 30 * i);
+
+        pauseOnSpace();
+    }
+
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165,60 + 30 * i, length / 2 + 380, 90 + 30 * i);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 60 + 30 * i, length / 2 + 380, 90 + 30 * i);
+
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 90 + 30 * i, length / 2 + 395, 120 + 30 * i);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 90 + 30 * i, length / 2 + 395, 120 + 30 * i);
+    pauseOnSpace(); 
+    int data = 0;
+    std::cout << "请输入要插入的数据" << endl;
+    infile >> data;
+    sprintf_s(str, "%d", data);
+    score = data;
+    settextstyle(15, 15, "宋体");
+    settextcolor(RED);
+    //outtextxy(length / 2 +120 - (sse * deltaX), 192, str);
+    outtextxy(295 + (sse * deltaX), 192, str);
+    Sleep(250);
+}
+//入队2
+void EnQueue2()
+{
+    CreateNode();
+    for (int i = 0; i < 2; i++)
+    {
+        setlinecolor(BLACK);
+        rectangle(length / 2 + 165, 0 + 30 * i, length / 2 + 465, 30 + 30 * i);
+        Sleep(250);
+        setlinecolor(WHITE);
+        rectangle(length / 2 + 165, 0 + 30 * i, length / 2 + 465, 30 + 30 * i);
+        Sleep(250);
+        pauseOnSpace();
+    }
+
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 60 + 30 * i, length / 2 + 380, 90 + 30 * i);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 60 + 30 * i, length / 2 + 380, 90 + 30 * i);
+
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 120, length / 2 + 265, 150);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 120, length / 2 + 265, 150);
+    Sleep(250);
+    pauseOnSpace();
+    for (int i = 0; i < 2; i++)
+    {
+        setlinecolor(BLACK);
+        rectangle(length / 2 + 165, 150 + 30 * i, length / 2 +390, 180 + 30 * i);
+        Sleep(250);
+        setlinecolor(WHITE);
+        rectangle(length / 2 + 165, 150 + 30 * i, length / 2 +390, 180 + 30 * i);
+        pauseOnSpace();
+        if (i == 1)
+        {
+            int data = 0;
+            std::cout << "请输入要插入的数据" << endl;
+            infile >> data;
+            sprintf(str, "%d", data);
+            score = data;
+            settextstyle(15, 15, "宋体");
+            settextcolor(RED);
+            //outtextxy(length/2+120- (sse * deltaX), 192, str);
+            outtextxy(295 + (sse * deltaX), 192, str);
+        }
+        Sleep(250);
+    }
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 210, length / 2 + 230, 240);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 210, length / 2 + 230, 240);
+    Sleep(250);
+}
+//出队1
+void OutQueue1()
+{
+    for (int i = 0; i < 2; i++)
+    {
+        setlinecolor(BLACK);
+        rectangle(length / 2 + 165, 270 + 30 * i, length / 2 + 465, 300 + 30 * i);
+        Sleep(250);
+        setlinecolor(WHITE);
+        rectangle(length / 2 + 165, 270 + 30 * i, length / 2 + 465, 300 + 30 * i);
+        pauseOnSpace();
+        if (i == 1)
+        {
+            int a = 0;
+            xPositions[a] = initialX + deltaX;
+            while (1)
+            {
+                xPositions[a] += deltaX;
+                if (xPositions[a] >= (length / 2 -30 - e * deltaX))
+                {
+                    settextcolor(BLACK);
+                    settextstyle(10, 10, "宋体");
+                    outtextxy(length / 2 - 165, wide / 2 - 175, "队列为空,无法出队,请先入队!");
+                    Sleep(2000);
+                    pauseOnSpace();
+                    settextcolor(WHITE);
+                    settextstyle(10, 10, "宋体");
+                    outtextxy(length / 2 - 165, wide / 2 - 175, "队列为空,无法出队,请先入队!");
+                    Sleep(1000);
+                    break;
+                }
+            }
+            //e++;
+        }
+        Sleep(200);
+    }
+}
+//出队2
+void OutQueue2()
+{
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 270 + 30 * i, length / 2 + 465, 300 + 30 * i);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 270 + 30 * i, length / 2 + 465, 300 + 30 * i);
+    pauseOnSpace();
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 300 + 30 * i, length / 2 + 365, 330 + 30 * i);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 300 + 30 * i, length / 2 + 365, 330 + 30 * i);
+    pauseOnSpace();
+    for (int i = 0; i < 3; i++)
+    {
+        setlinecolor(BLACK);
+        rectangle(length / 2 + 165, 330 + 30 * i, length / 2 + 365, 360 + 30 * i);
+        Sleep(250);
+        setlinecolor(WHITE);
+        rectangle(length / 2 + 165, 330 + 30 * i, length / 2 + 365, 360 + 30 * i);
+        pauseOnSpace();
+        if (i == 2)
+        {
+            int a = 0;
+            xPositions[a] = initialX + deltaX;
+            setfillcolor(WHITE);
+            clearrectangle(xPositions[a] + (e - 2) * deltaX, y, xPositions[a] + 50 + (e - 2) * deltaX, y + 100);
+            e++;
+            Sleep(250);
+            break;
+        }
+        Sleep(250);
+    }
+    setlinecolor(BLACK);
+    rectangle(length / 2 + 165, 420 + 30 * i, length / 2 + 265, 450 + 30 * i);
+    Sleep(250);
+    setlinecolor(WHITE);
+    rectangle(length / 2 + 165, 420 + 30 * i, length / 2 + 265, 450 + 30 * i);
+}
+//暂停
+void pauseOnSpace()
+{
+    if (GetAsyncKeyState(VK_SPACE) & 0x0001)
+    {
+        //cout << "已暂停！" << endl;
+        while (!(GetAsyncKeyState(VK_SPACE) & 0x0001));
+        //cout << "继续！" << endl;
+    }
+}
+//队首元素代码区移动1
+void ShowFrontPush1()
+{
+    Queue q;
+    pauseOnSpace();
+    Sleep(250);
+    for (int i = 0; i < 2; i++)
+    {
+        setlinecolor(BLACK);
+        rectangle(length / 2 + 165, 480 + 30 * i, length / 2 + 485, 510 + 30 * i);
+        Sleep(250);
+        pauseOnSpace();
+        setlinecolor(WHITE);
+        rectangle(length / 2 + 165, 480 + 30 * i, length / 2 + 485, 510 + 30 * i);
+        pauseOnSpace();
+        int FrontElement;
+        if (i == 1)
+        {
+            //输出队首元素
+            settextstyle(25, 25, "宋体");
+            settextcolor(BLACK);
+            outtextxy(length / 2 - 110, wide / 2 - 230, std::to_string(q.frontElement(FrontElement)).c_str());
+            outtextxy(length / 2 - 70, wide / 2 - 230, "(NULL)");
+            Sleep(3000);
+            settextcolor(WHITE);
+            outtextxy(length / 2 - 110, wide / 2 - 230, std::to_string(q.frontElement(FrontElement)).c_str());
+            outtextxy(length / 2 - 70, wide / 2 - 230, "(NULL)");
+        }
+        Sleep(250);
+    }
+}
+//队列元素移动
+void QueueElementPush()
+{
+    int yy = 290;//610
+    while (1)
+    {
+        pauseOnSpace();
+        settextstyle(25, 25, "宋体");
+        settextcolor(BLACK);
+        outtextxy(yy + sse * deltaX, 15, str);
+        Sleep(250);
+        pauseOnSpace();
+        break;
+    }
+}
+//队列元素删除
+void QueueElementDelete()
+{
+    int yy = 290;
+    setlinecolor(WHITE);
+    fillrectangle(yy -20 + ssf * deltaX , 0, yy + ssf * deltaX + 30, wide / 2 - 250);
+    ssf++;
+}
+
+//命令序列箭头
+void CSArrow()
+{
+        setlinecolor(RED);
+        line(15, 58 + ssg * 22, 45, 58 + ssg * 22);
+        line(35, 53 + ssg * 22, 45, 58 + ssg * 22);
+        line(35, 63 + ssg * 22, 45, 58 + ssg * 22);
+        ssg++;
+}
+//删除命令序列箭头
+void DeleteCSArrow()
+{
+    setlinecolor(WHITE);
+    line(15, 58 + (ssg - 1) * 22, 45, 58 + (ssg - 1) * 22);
+    line(35, 53 + (ssg - 1) * 22, 45, 58 + (ssg - 1) * 22);
+    line(35, 63 + (ssg - 1) * 22, 45, 58 + (ssg - 1) * 22);
+}
+//显示队尾指针1
+void ShowTail1(int a)
+{
+    setlinecolor(BLACK);
+    line(a, a - 30, a, a);
+    line(a, a - 30, a - 5, a - 25);
+    line(a, a - 30, a + 5, a - 25);
+    settextcolor(BLACK);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 10, a + 15, "tail");//345
+}
+//删除队尾指针1
+void DeleteTail1(int a)
+{
+    setlinecolor(WHITE);
+    line(a, a - 30, a, a);
+    line(a, a - 30, a - 5, a - 25);
+    line(a, a - 30, a + 5, a - 25);
+    settextcolor(WHITE);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 10, a + 15, "tail");//345
+    LineChange();
+}
+//显示队尾指针2
+void ShowTail2(int a)
+{
+    setlinecolor(BLACK);
+    line(a + sse * deltaX, a - 30, a + sse * deltaX, a);
+    line(a + sse * deltaX, a - 30, a - 5 + sse * deltaX, a - 25);
+    line(a + sse * deltaX, a - 30, a + 5 + sse * deltaX, a - 25);
+    settextcolor(BLACK);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 10 + sse * deltaX, a + 15, "tail");
+    //p
+}
+//删除队尾指针2
+void DeleteTail2(int a)
+{
+    setlinecolor(WHITE);
+    line(a + (sse-1) * deltaX, a - 30, a + (sse - 1) * deltaX, a);
+    line(a + (sse - 1) * deltaX, a - 30, a - 5 + (sse - 1) * deltaX, a - 25);
+    line(a + (sse - 1) * deltaX, a - 30, a + 5 + (sse - 1) * deltaX, a - 25);
+    settextcolor(WHITE);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 10 + (sse - 1) * deltaX, a + 15, "tail");
+    LineChange();
+}
+//显示队首指针1
+void ShowFront1(int a)
+{
+    setlinecolor(BLACK);
+    line(a - 40, a - 30, a - 40, a);
+    line(a - 40, a - 30, a - 45, a - 25);
+    line(a - 40, a - 30, a - 35, a - 25);
+    settextcolor(BLACK);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 70, a + 5, "front");
+}
+//显示队首指针2
+void ShowFront2(int a)
+{
+    setlinecolor(BLACK);
+    line(a - 40 + e * deltaX, a - 30, a - 40 + e * deltaX, a);
+    line(a - 40 + e * deltaX, a - 30, a - 45 + e * deltaX, 295);
+    line(a - 40 + e * deltaX, a - 30, a - 35 + e * deltaX, 295);
+    settextcolor(BLACK);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 70 + e * deltaX, a + 5, "front");
+
+}
+//删除队首指针1
+void DeleteFront1(int a)
+{
+    setlinecolor(WHITE);
+    line(a - 40, a - 30, a - 40, a);
+    line(a - 40, a - 30, a - 45, a - 25);
+    line(a - 40, a - 30, a - 35, a - 25);
+    settextcolor(WHITE);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 70, a + 5, "front");
+    LineChange();
+}
+//删除队首指针2
+void DeleteFront2(int a)
+{
+    setlinecolor(WHITE);
+    line(a - 40 + (e-1) * deltaX, a - 30, a - 40 + (e - 1) * deltaX, a);
+    line(a - 40 + (e - 1) * deltaX, a - 30, a - 45 + (e - 1) * deltaX, 295);
+    line(a - 40 + (e - 1) * deltaX, a - 30, a - 35 + (e - 1) * deltaX, 295);
+    settextcolor(WHITE);
+    settextstyle(10, 10, "宋体");
+    outtextxy(a - 70 + (e-1) * deltaX, a + 5, "front");
+    LineChange();
+}
+//删除队首队尾指针1
+void DeleteFrontTail1()
+{
+    DeleteFront1(s);
+    DeleteTail1(s);
+    /*DeleteTail2();
+    DeleteFront2();*/
+}
+//删除队首队尾指针2
+void DeleteFrontTail2()
+{
+    DeleteTail2(s);
+    DeleteFront2(s);
+}
+
+//链表箭头
+void QueueArrow()
+{
+    setlinecolor(RED);
+    line(300 + 55 * (sse - 1), 255, 325 + 55 * (sse - 1), 255);
+    line(325 + 55 * (sse - 1), 255, 325 + 55 * (sse - 1), 205);
+    line(325 + 55 * (sse - 1), 205, 334 + 55 * (sse - 1), 205);
+    line(331 + 55 * (sse - 1), 201, 334 + 55 * (sse - 1), 205);
+    line(331 + 55 * (sse - 1), 209, 334 + 55 * (sse - 1), 205);
+    setlinestyle(PS_SOLID, 0);
+    //py - 1;
+}
+//删除链表箭头   
+void DeleteQueueArrow()
+{
+    int a = 0;
+    setlinecolor(WHITE);
+    //setlinestyle(PS_SOLID, 3);
+    line(300 + 55 * (e - 1), 255, 325 + 55 * (e - 1), 255);
+    line(325 + 55 * (e - 1), 255, 325 + 55 * (e - 1), 205);
+    line(325 + 55 * (e - 1), 205, 334 + 55 * (e - 1), 205);
+    line(331 + 55 * (e - 1), 201, 334 + 55 * (e - 1), 205);
+    line(331 + 55 * (e - 1), 209, 334 + 55 * (e - 1), 205);
+    setlinestyle(PS_SOLID, 0);
+    setlinecolor(BLACK);
+
+    //更新下方矩阵
+    fillrectangle(280 + 55 * (e - 1), y + 50, 280 + 55 * (e - 1) + 40, y + 100);
+}
